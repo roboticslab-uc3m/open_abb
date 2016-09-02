@@ -267,7 +267,7 @@ class Robot:
         and fill in the DIO you want this to switch. 
         '''
         msg = '97 ' + str(int(bool(value))) + ' #'
-        return self.send(msg)
+        return self.robsock.send(msg)
 
     def checkCoordinates(self, coords):
         try: 
