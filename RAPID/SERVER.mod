@@ -400,7 +400,18 @@ PROC main()
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
-				
+
+             CASE 97:
+                 IF nParams = 1 THEN
+                    IF params{1} = 1 THEN
+                        SetDO DO10_2, high;
+                    ELSE
+                        SetDO DO10_2, low;
+                    ENDIF
+                    ok := SERVER_OK;
+                 ELSE
+                     ok:=SERVER_BAD_MSG;
+
             CASE 98: !returns current robot info: serial number, robotware version, and robot type
                 IF nParams = 0 THEN
                     addString := GetSysInfo(\SerialNo) + "*";
