@@ -411,6 +411,7 @@ PROC main()
                     ok := SERVER_OK;
                  ELSE
                      ok:=SERVER_BAD_MSG;
+                 ENDIF
 
             CASE 98: !returns current robot info: serial number, robotware version, and robot type
                 IF nParams = 0 THEN
