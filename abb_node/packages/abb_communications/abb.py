@@ -260,6 +260,15 @@ class Robot:
         else:
             return False
 
+    def setDio(self, value, id=0):
+        '''
+        A function to set a physical DIO line on the robot.
+        For this to work you're going to need to edit the RAPID function
+        and fill in the DIO you want this to switch. 
+        '''
+        msg = '97 ' + str(int(bool(value))) + ' #'
+        return self.send(msg)
+
     def checkCoordinates(self, coords):
         try: 
             if (len(coords) == 2):
