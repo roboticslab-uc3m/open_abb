@@ -289,6 +289,25 @@ class Robot:
             return False
         return self.send(msg_1)
 
+    def pick_and_place(self, x_pick, y_pick, x_place, y_place, heightFromPickDown):
+        '''
+        Executes a pick and place sequence remotely.
+        :param x_pick: X component of the pick point
+        :param y_pick: Y component of the pick point
+        :param x_place: X component of the place point
+        :param y_place: Y component of the place point
+        :param heightFromPickDown: max height to rise from PickDown point
+        '''
+        msg = '90 '
+        msg += format(x_pick * self.scale_linear,  "+08.1f") + " "
+        msg += format(y_pick * self.scale_linear,  "+08.1f") + " "
+        msg += format(x_place * self.scale_linear, "+08.1f") + " "
+        msg += format(y_place * self.scale_linear, "+08.1f") + " "
+        msg += format(heightFromPickDown * self.scale_linear, "+08.1f") + " "
+        msg += '#'
+
+        return self.send(msg)
+
     def set_dio(self, value, id=0):
         '''
         A function to set a physical DIO line on the robot.
@@ -296,8 +315,7 @@ class Robot:
         and fill in the DIO you want this to switch. 
         '''
         msg = '97 ' + str(int(bool(value))) + ' #'
-        return 
-        #return self.send(msg)
+        return self.send(msg)
         
     def send(self, message, wait_for_response=True):
         '''
