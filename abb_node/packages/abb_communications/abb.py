@@ -62,14 +62,17 @@ class Robot:
         finally:
             s.shutdown(socket.SHUT_RDWR)
 
-    def set_units(self, linear, angular):
+    def set_units(self, linear=None, angular=None):
         units_l = {'millimeters': 1.0,
                    'meters'     : 1000.0,
                    'inches'     : 25.4}
         units_a = {'degrees' : 1.0,
                    'radians' : 57.2957795}
-        self.scale_linear = units_l[linear]
-        self.scale_angle  = units_a[angular]
+        if linear:
+            self.scale_linear = units_l[linear]
+
+        if angular:
+            self.scale_angle  = units_a[angular]
 
     def set_cartesian(self, pose):
         '''
