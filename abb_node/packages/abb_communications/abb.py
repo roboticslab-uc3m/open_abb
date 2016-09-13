@@ -292,6 +292,10 @@ class Robot:
             return False
         return self.send(msg_1)
 
+    def scan(self):
+        msg = '80 #'
+        return self.send(msg)
+
     def pick_and_place(self, x_pick, y_pick, x_place, y_place, heightFromPickDown):
         '''
         Executes a pick and place sequence remotely.
