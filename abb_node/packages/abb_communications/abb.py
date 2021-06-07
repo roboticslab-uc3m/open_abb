@@ -22,6 +22,7 @@ log.addHandler(logging.NullHandler())
     
 class Robot:
     def __init__(self, 
+                 #ip          = '127.0.0.1', 
                  ip          = '192.168.125.1', 
                  port_motion = 5000,
                  port_logger = 5001):
@@ -87,7 +88,7 @@ class Robot:
         Executes a move immediately, from current joint angles,
         to 'joints', in degrees. 
         '''
-        if len(joints) <> 6: return False
+        if len(joints) != 6: return False
         msg = "02 "
         for joint in joints: msg += format(joint*self.scale_angle, "+08.2f") + " " 
         msg += "#" 
@@ -168,7 +169,7 @@ class Robot:
                 external axis linear, external axis orientation]
         '''
 
-        if len(speed) <> 4: return False
+        if len(speed) != 4: return False
         msg = "08 " 
         msg += format(speed[0], "+08.1f") + " " 
         msg += format(speed[1], "+08.2f") + " "  
@@ -250,7 +251,7 @@ class Robot:
     def clear_buffer(self):
         msg = "31 #"
         data = self.send(msg)
-        if self.buffer_len() <> 0:
+        if self.buffer_len() != 0:
             log.warn('clear_buffer failed! buffer_len: %i', self.buffer_len())
             raise NameError('clear_buffer failed!')
         return data
@@ -271,7 +272,7 @@ class Robot:
         return self.send(msg)
 
     def set_external_axis(self, axis_unscaled=[-550,0,0,0,0,0]):
-        if len(axis_values) <> 6: return False
+        if len(axis_values) != 6: return False
         msg = "34 "
         for axis in axis_values:
             msg += format(axis, "+08.2f") + " " 
@@ -287,7 +288,7 @@ class Robot:
         msg_1 = "36 " + self.format_pose(pose_end)
 
         data = self.send(msg_0).split()
-        if data[1] <> '1': 
+        if data[1] != '1': 
             log.warn('move_circular incorrect response, bailing!')
             return False
         return self.send(msg_1)
@@ -331,7 +332,11 @@ class Robot:
         '''
         caller = inspect.stack()[1][3]
         log.debug('%-14s sending: %s', caller, message)
+        message = bytes(message, 'utf-8') # if not send launches TypeError
         self.sock.send(message)
+
+        
+
         time.sleep(self.delay)
         if not wait_for_response: return
         data = self.sock.recv(4096)
