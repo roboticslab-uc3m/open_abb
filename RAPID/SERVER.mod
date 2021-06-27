@@ -10,10 +10,6 @@ PERS wobjdata currentWobj := [FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,
 PERS speeddata currentSpeed;
 PERS zonedata currentZone;
 
-PERS tooldata asus:=[TRUE,[[0,0,1000],[1,0,0,0]],[1,[0,0,1],[1,0,0,0],0,0,0]];
-PERS tooldata pinzaTextiles:=[TRUE,[[48.6251,8.30102,269.235],[1,0,0,0]],[4,[0,0,-100],[1,0,0,0],0,0,0]];
-PERS tooldata asusTextiles:=[TRUE,[[121.94,54.5219,84.6058],[1,0,0,0]],[4,[0,0,-100],[1,0,0,0],0,0,0]];
-
 !// Clock Synchronization
 PERS bool startLog:=TRUE;
 PERS bool startRob:=TRUE;
@@ -284,13 +280,29 @@ PROC main()
 
             CASE 7: !Set Work Object
                 IF nParams = 7 THEN
-                    currentWobj.oframe.trans.x:=params{1};
-                    currentWobj.oframe.trans.y:=params{2};
-                    currentWobj.oframe.trans.z:=params{3};
-                    currentWobj.oframe.rot.q1:=params{4};
-                    currentWobj.oframe.rot.q2:=params{5};
-                    currentWobj.oframe.rot.q3:=params{6};
-                    currentWobj.oframe.rot.q4:=params{7};
+                    currentWobj.uframe.trans.x:=params{1};
+                    currentWobj.uframe.trans.y:=params{2};
+                    currentWobj.uframe.trans.z:=params{3};
+                    currentWobj.uframe.rot.q1:=params{4};
+                    currentWobj.uframe.rot.q2:=params{5};
+                    currentWobj.uframe.rot.q3:=params{6};
+                    currentWobj.uframe.rot.q4:=params{7};
+                    ok := SERVER_OK;
+                ELSEIF nParams = 14 THEN
+                    currentWobj.uframe.trans.x:=params{1};
+                    currentWobj.uframe.trans.y:=params{2};
+                    currentWobj.uframe.trans.z:=params{3};
+                    currentWobj.uframe.rot.q1:=params{4};
+                    currentWobj.uframe.rot.q2:=params{5};
+                    currentWobj.uframe.rot.q3:=params{6};
+                    currentWobj.uframe.rot.q4:=params{7};
+                    currentWobj.oframe.trans.x:=params{8};
+                    currentWobj.oframe.trans.y:=params{9};
+                    currentWobj.oframe.trans.z:=params{10};
+                    currentWobj.oframe.rot.q1:=params{11};
+                    currentWobj.oframe.rot.q2:=params{12};
+                    currentWobj.oframe.rot.q3:=params{13};
+                    currentWobj.oframe.rot.q4:=params{14};     
                     ok := SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -527,50 +539,55 @@ PROC scan()
 	CONST robtarget center100:=[[1331.89,-66.31,179.81],[0.471784,-0.387667,0.79185,0.0103615],[-1,0,-2,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
 	CONST robtarget center110:=[[1331.90,-66.31,179.82],[0.471787,-0.387671,0.791847,0.0103581],[-1,0,-2,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
 	CONST speeddata speed1:=[100,20,5000,1000];    
-	MoveJ topLeft, speed1, z50, asus;
-	MoveJ topRight, speed1, z50, asus;
-	MoveJ bottomRight, speed1, z50, asus;
-	MoveJ bottomLeft, speed1, z50, asus;
-	MoveJ center, speed1, z50, asus;
-	MoveJ center10, speed1, z50, asus;
-	MoveJ center20, speed1, z50, asus;
-	MoveJ center30, speed1, z50, asus;
-	MoveJ center40, speed1, z50, asus;
-	MoveJ center50, speed1, z50, asus;
-	MoveJ center, speed1, z50, asus;
-	MoveJ center70, speed1, z50, asus;
-	MoveJ center80, speed1, z50, asus;
-	MoveJ center90, speed1, z50, asus;
-	MoveJ center100, speed1, z50, asus;
-	MoveJ center, speed1, z50, asus;
+	MoveJ topLeft, speed1, z50, currentTool;
+	MoveJ topRight, speed1, z50, currentTool;
+	MoveJ bottomRight, speed1, z50, currentTool;
+	MoveJ bottomLeft, speed1, z50, currentTool;
+	MoveJ center, speed1, z50, currentTool;
+	MoveJ center10, speed1, z50, currentTool;
+	MoveJ center20, speed1, z50, currentTool;
+	MoveJ center30, speed1, z50, currentTool;
+	MoveJ center40, speed1, z50, currentTool;
+	MoveJ center50, speed1, z50, currentTool;
+	MoveJ center, speed1, z50, currentTool;
+	MoveJ center70, speed1, z50, currentTool;
+	MoveJ center80, speed1, z50, currentTool;
+	MoveJ center90, speed1, z50, currentTool;
+	MoveJ center100, speed1, z50, currentTool;
+	MoveJ center, speed1, z50, currentTool;
 ENDPROC
 
-PROC pickAndPlace(num pPickDownX, num pPickDownY, num pPlaceDownX, num pPlaceDownY, num heightFromPickDown)
-	CONST robtarget pReposo:=[[1000,0,500],[0.04955,0.00701,0.99874,0.003191],[-1,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-	VAR robtarget pPickDown:=[[0,0,176],[0.04955,0.00701,0.99874,0.003191],[-1,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    VAR robtarget pPlaceDown:=[[0,0,200],[0.04955,0.00701,0.99874,0.003191],[-1,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    !CONST num heightFromPickDown := 120; ! was 175
-    pPickDown.trans.x := pPickDownX;
-    pPickDown.trans.y := pPickDownY;
-    pPlaceDown.trans.x := pPlaceDownX;
-    pPlaceDown.trans.y := pPlaceDownY;
+PROC pickAndPlace(num pPickXPar, num pPickYPar, num pPlaceXPar, num pPlaceYPar, num tableHeightPar)
+    !CONST num pPickX := pPickXPar;
+    !CONST num pPickY := pPickYPar;
+    !CONST num pPlaceX := pPlaceXPar;
+    !CONST num pPlaceY := pPlaceYPar;
+    !CONST num tableHeight := tableHeightPar;
+	!CONST robtarget pReposo:=[[1000,0,500],[0.04955,0.00701,0.99874,0.003191],[-1,0,-1,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+	VAR robtarget pPickDown;
+    VAR robtarget pPlaceDown;
+    CONST num heightFromPickDown := -120;! was 175
+    
+    pPickDown:=[[pPickXPar,pPickYPar,tableHeightPar],[1,0,0,0],[0,0,0,0], externalAxis];
+    pPlaceDown:=[[pPlaceXPar,pPlaceYPar,tableHeightPar],[1,0,0,0],[0,0,0,0], externalAxis];    
+
     SetDO DO10_2, high;
     !ConfJ\Off;
     !ConfL\Off;
-    MoveJ pReposo, v100, z50, pinzaTextiles;
-	MoveJ Offs(pPickDown,0,0,heightFromPickDown), v100, z50, pinzaTextiles;
-	MoveL pPickDown, v50, fine, pinzaTextiles;
+    !MoveJ pReposo, v100, z50, currentTool;
+	MoveJ Offs(pPickDown,0,0,heightFromPickDown), v100, z50, currentTool \WObj:=currentWobj ;
+	MoveL pPickDown, v50, fine, currentTool \WObj:=currentWobj ;
     WaitTime \InPos, 0.1;
     SetDO DO10_2, low;
     WaitTime 1;
-    MoveL Offs(pPickDown,0,0,heightFromPickDown), v50, fine, pinzaTextiles;
-	MoveJ Offs(pPlaceDown,0,0,heightFromPickDown-25), v100, z50, pinzaTextiles;
-    MoveL pPlaceDown, v50, fine, pinzaTextiles;
+    MoveL Offs(pPickDown,0,0,heightFromPickDown), v50, fine, currentTool \WObj:=currentWobj ;
+	MoveJ Offs(pPlaceDown,0,0,heightFromPickDown-25), v100, z50, currentTool \WObj:=currentWobj ;
+    MoveL pPlaceDown, v50, fine, currentTool \WObj:=currentWobj ;
     WaitTime \InPos, 0.1;
     SetDO DO10_2, high;
     WaitTime 1;
-    MoveL Offs(pPlaceDown,0,0,heightFromPickDown-25), v50, fine, pinzaTextiles;
-    MoveJ pReposo, v100, z50, pinzaTextiles;
+    MoveL Offs(pPlaceDown,0,0,heightFromPickDown-25), v50, fine, currentTool \WObj:=currentWobj ;
+    !MoveJ pReposo, v100, z50, currentTool;
     SetDO DO10_2, low;
 ENDPROC
     
