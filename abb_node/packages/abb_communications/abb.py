@@ -26,16 +26,18 @@ class Robot:
                  ip          = '192.168.125.1', 
                  port_motion = 5000,
                  port_logger = 5001):
+                 wobj_rs_user = [[1200,0,700],[0,0,-1,0]],
+                 wobj_rs_obj = [[0,0, 0],[1,0,0,0]]
+                 ):
 
         self.delay   = .08
-
         self.connect_motion((ip, port_motion))
         #log_thread = Thread(target = self.get_net, 
         #                    args   = ((ip, port_logger))).start()
         
-        self.set_units('millimeters', 'degrees')
+        self.set_units('millimeters', 'radians')
         self.set_tool()
-        self.set_workobject()
+        self.set_workobject(work_user=wobj_rs_user, work_obj=wobj_rs_obj)
         self.set_speed()
         self.set_zone()
 
@@ -155,12 +157,12 @@ class Robot:
         log.debug('get_tool returning: %s', str(self.tool))
         return self.tool
 
-    def set_workobject(self, work_obj=[[0,0,0],[1,0,0,0]]):
+    def set_workobject(self, work_user=[[0,0,0],[1,0,0,0]], work_obj=[[0,0,0],[1,0,0,0]]):
         '''
         The workobject is a local coordinate frame you can define on the robot,
         then subsequent cartesian moves will be in this coordinate frame. 
         '''
-        msg = "07 " + self.format_pose(work_obj)   
+        msg = "07 " + self.format_pose(work_user) + " " + self.format_pose(work_obj)  
         self.send(msg)
 
     def set_speed(self, speed=[100,50,50,50]):
@@ -297,7 +299,7 @@ class Robot:
         msg = '80 #'
         return self.send(msg)
 
-    def pick_and_place(self, x_pick, y_pick, x_place, y_place, heightFromPickDown):
+    def pick_and_place(self, x_pick, y_pick, x_place, y_place, heightFromPickDown=100):
         '''
         Executes a pick and place sequence remotely.
         :param x_pick: X component of the pick point
@@ -383,4 +385,3 @@ if __name__ == '__main__':
     log = logging.getLogger('abb')
     log.setLevel(logging.DEBUG)
     log.addHandler(handler_stream)
-    
